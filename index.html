@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple markers</title>
+    <style>
+      html, body{
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+	   #map-canvas {
+		height:100%;
+		width:80%;
+		float:right;
+	   }
+	   #control-panel{
+		width:20%;
+		float:left;
+	   }
+		.controls {
+        margin-top: 16px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+      .pac-input {
+        background-color: #fff;
+        padding: 0 11px 0 13px;
+        width: 280px;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        text-overflow: ellipsis;
+      }
+
+      .pac-input:focus {
+        border-color: #4d90fe;
+        margin-left: -1px;
+        padding-left: 14px;  /* Regular padding-left + 1. */
+        width: 281px;
+      }	   
+	  .btn-place-control {
+		cursor:pointer;
+	  }
+	  .panel { 
+		position: relative;
+	  }
+	  .remove {
+		color: #E13E3F;
+		display: block;
+		left: 290px;
+		position: absolute;
+		text-shadow: 0 2px 6px rgba(1, 0, 0, 0.9);
+		top: 40px;
+	  }
+    </style>
+<script src="http://code.jquery.com/jquery-latest.min.js"
+        type="text/javascript"></script>	
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&key=AIzaSyCtNo_o0u8wYeqgiFF-KpvAtEy18T-PvAo"></script>
+  </head>
+  <body>
+	<div id="control-panel">
+	<form>
+    <div class="panel">
+		<label>Place 1</label>			
+		<input id="place_0" class="controls pac-input" type="text"
+			placeholder="Enter a location"> <!-- <span class="removemarker" onclick="removePlace(place_0)">x</span>	 -->
+		</div>
+	</div>
+	<span onclick="addplace()">+</span>				
+	</form>
+	</div>  
+	
+    <div id="map-canvas"></div>
+    <script>
+	
+	var inputFields = parseInt($('input').size());	
+	
+	function initialize() {
+	  var myLatlng = new google.maps.LatLng(13.727729,100.521892);
+	  var mapOptions = {
+		zoom: 4,
+		center: myLatlng
+	  }
+	  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	  
+		for (i=0; i<inputFields; i++) {
+				var location = document.getElementById('place_'+ i);	
+				var autocomplete = new google.maps.places.Autocomplete(location);
+        };			  
+	  
+	  
+	  var marker = new google.maps.Marker({
+		  position: myLatlng,
+		  map: map,
+		  title: 'Hello World!'
+	  });
+	}
+		
+	function removePlace(arg){
+		$($(arg).parent()).remove();
+		inputFields--;
+	}
+	
+	function addplace(){
+		$('form').append('<div class="panel"><label>Place '+ (inputFields+1) +'</label><input id="place_'+ inputFields +'" type="text" class="controls pac-input"><span class="btn-place-control remove" onclick="removePlace(place_'+ inputFields +')">x</span></div>');
+		inputFields++;	
+		this.initialize();
+	}
+	
+	google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>	
+  </body>
+</html>
